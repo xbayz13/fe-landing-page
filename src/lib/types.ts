@@ -31,6 +31,7 @@ export type Feature = {
   title: string;
   description: string;
   icon?: string;
+  highlightOrder?: number;
   pillar?: string;
 };
 
@@ -40,6 +41,8 @@ export type Testimonial = {
   authorName: string;
   authorRole?: string;
   company?: string;
+  avatarUrl?: string;
+  featured?: boolean;
 };
 
 export type CallToActionBlock = {
@@ -49,6 +52,7 @@ export type CallToActionBlock = {
   eyebrow?: string;
   buttonLabel?: string;
   buttonUrl?: string;
+  variant?: "solid" | "outline" | "ghost";
 };
 
 export type FooterLink = {
@@ -56,6 +60,7 @@ export type FooterLink = {
   label: string;
   url: string;
   groupName: string;
+  position?: number;
 };
 
 export type LandingConfig = {
@@ -73,6 +78,17 @@ export type BlogAuthor = {
   name: string;
   title?: string;
   avatarUrl?: string;
+  bio?: string;
+  websiteUrl?: string;
+  linkedinUrl?: string;
+  twitterUrl?: string;
+};
+
+export type BlogCategory = {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
 };
 
 export type BlogPost = {
@@ -80,11 +96,17 @@ export type BlogPost = {
   title: string;
   slug: string;
   excerpt?: string;
+  content?: string;
   coverImageUrl?: string;
   status: string;
   publishedAt?: string;
   createdAt?: string;
+  updatedAt?: string;
+  readingTimeMinutes?: number;
+  seoTitle?: string;
+  seoDescription?: string;
   author?: BlogAuthor;
+  category?: BlogCategory;
 };
 
 export type SeoMetadata = {

@@ -1,37 +1,17 @@
-import { BlogPost, LandingConfig, SeoMetadata } from "./types";
+import type {
+  BlogPost,
+  BlogAuthor,
+  BlogCategory,
+  LandingConfig,
+  SeoMetadata,
+} from "./types";
+import { apiClient } from "./api-client";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000/api";
-
-async function fetcher<T>(
-  path: string,
-  init?: RequestInit & { revalidateSeconds?: number },
-): Promise<T> {
-  const url = `${API_BASE_URL}${path}`;
-  const { revalidateSeconds = 60, ...rest } = init ?? {};
-
-  const response = await fetch(url, {
-    ...rest,
-    headers: {
-      "Content-Type": "application/json",
-      ...(rest?.headers ?? {}),
-    },
-    next: {
-      revalidate: revalidateSeconds,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch ${url}: ${response.status} ${response.statusText}`,
-    );
-  }
-
-  return (await response.json()) as T;
-}
-
+// Backward compatibility: Re-export using new API client abstraction
 export async function fetchLandingConfig() {
-  return fetcher<LandingConfig>("/site-config", { revalidateSeconds: 120 });
+  return apiClient.get<LandingConfig>("/site-config", {
+    revalidateSeconds: 120,
+  });
 }
 
 export async function fetchBlogPosts(limit = 3) {
@@ -40,7 +20,7 @@ export async function fetchBlogPosts(limit = 3) {
     page: "1",
     limit: String(limit),
   });
-  const { data } = await fetcher<{ data: BlogPost[] }>(
+  const { data } = await apiClient.get<{ data: BlogPost[] }>(
     `/blog/posts?${search.toString()}`,
     { revalidateSeconds: 60 },
   );
@@ -49,8 +29,42 @@ export async function fetchBlogPosts(limit = 3) {
 
 export async function fetchSeoMetadata(postSlug?: string) {
   const query = postSlug ? `?postSlug=${postSlug}` : "";
-  return fetcher<SeoMetadata>(`/seo/metadata${query}`, {
+  return apiClient.get<SeoMetadata>(`/seo/metadata${query}`, {
     revalidateSeconds: 60,
   });
 }
 
+// Blog data for admin
+export async function fetchAllBlogPosts(params?: {
+  status?: string;
+  page?: number;
+  limit?: number;
+}) {
+  const search = new URLSearchParams();
+  if (params?.status) search.set("status", params.status);
+  if (params?.page) search.set("page", String(params.page));
+  if (params?.limit) search.set("limit", String(params.limit));
+  const query = search.toString();
+  return apiClient.get<{
+    data: BlogPost[];
+    meta: { page: number; limit: number; total: number; totalPages: number };
+  }>(`/blog/posts${query ? `?${query}` : ""}`, { revalidateSeconds: 30 });
+}
+
+export async function fetchBlogPost(idOrSlug: string) {
+  return apiClient.get<BlogPost>(`/blog/posts/${idOrSlug}`, {
+    revalidateSeconds: 60,
+  });
+}
+
+export async function fetchAllAuthors() {
+  return apiClient.get<BlogAuthor[]>("/blog/authors", {
+    revalidateSeconds: 120,
+  });
+}
+
+export async function fetchAllCategories() {
+  return apiClient.get<BlogCategory[]>("/blog/categories", {
+    revalidateSeconds: 120,
+  });
+}

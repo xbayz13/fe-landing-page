@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { fallbackLandingConfig, loadLandingData } from "@/lib/landing-data";
+import { formatDate } from "@/lib/format";
 
 export const revalidate = 60;
 export { generateLandingMetadata as generateMetadata } from "@/lib/landing-data";
@@ -101,14 +102,5 @@ export default async function SerifTemplate() {
       </div>
     </main>
   );
-}
-
-function formatDate(input?: string) {
-  if (!input) return "Coming soon";
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  }).format(new Date(input));
 }
 
