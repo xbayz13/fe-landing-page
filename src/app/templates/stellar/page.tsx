@@ -62,7 +62,7 @@ export default async function StellarTemplate() {
               <li>✔︎ Site Config: hero, CTA, navigasi, testimonial.</li>
               <li>✔︎ Blog module dengan status + SEO metadata.</li>
               <li>✔︎ Endpoint SEO: metadata, sitemap, RSS.</li>
-              <li>✔︎ Admin API key guard untuk write operations.</li>
+              <li>✔︎ JWT auth memastikan hanya admin yang bisa menulis data.</li>
             </ul>
           </div>
         </section>

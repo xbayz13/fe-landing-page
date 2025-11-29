@@ -59,7 +59,7 @@ export default async function SerifTemplate() {
               <li>– CMS NestJS menyimpan hero, CTA, testimoni, footer.</li>
               <li>– Blog posts dilengkapi status, slug unik, SEO metadata.</li>
               <li>– Endpoint SEO siap untuk sitemap & RSS.</li>
-              <li>– API key guard memastikan hanya admin yang bisa mutasi.</li>
+              <li>– JWT auth memastikan hanya admin yang bisa melakukan mutasi.</li>
             </ul>
           </div>
         </section>

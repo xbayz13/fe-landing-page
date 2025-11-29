@@ -22,7 +22,7 @@ import {
   PostsSection,
   TestimonialSection,
 } from "@/components/admin/sections";
-import { isBlogTab, ADMIN_TABS, type AdminTabId } from "./tabs";
+import { isBlogTab, ADMIN_TABS, type AdminTabId } from "../tabs";
 
 export const dynamic = "force-dynamic";
 

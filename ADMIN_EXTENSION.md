@@ -28,7 +28,7 @@ Gunakan komponen dari `src/components/admin/admin-form-fields.tsx`:
 ## Contoh: Menambahkan Navigation Section
 
 ```tsx
-// Di src/app/admin/page.tsx
+// Di src/app/admin/(dashboard)/page.tsx
 
 import { createNavigationAction, updateNavigationAction, deleteNavigationAction } from "@/lib/admin-actions";
 
@@ -68,7 +68,7 @@ Layout admin sudah menggunakan `AdminNav` component yang menggunakan query param
 Anda bisa menambahkan section yang ditampilkan berdasarkan query param:
 
 ```tsx
-// Di src/app/admin/page.tsx
+// Di src/app/admin/(dashboard)/page.tsx
 export default async function AdminPage({
   searchParams,
 }: {

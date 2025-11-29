@@ -58,7 +58,7 @@ export default async function PulseTemplate() {
               <p>✓ Site config modul untuk hero, CTA, navigasi, footer</p>
               <p>✓ Blog posts dengan status, slug unik, SEO metadata</p>
               <p>✓ Endpoint sitemap + RSS siap konsumsi</p>
-              <p>✓ API key guard untuk rute mutasi</p>
+              <p>✓ JWT auth untuk melindungi rute mutasi</p>
             </div>
           </div>
           <div className="rounded-3xl border border-slate-100 bg-slate-50 p-6">

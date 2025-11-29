@@ -1,24 +1,27 @@
 "use server";
 
+import { cookies } from "next/headers";
+import { ADMIN_AUTH_COOKIE } from "@/lib/auth/cookies";
+
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000/api";
-const ADMIN_API_KEY = process.env.ADMIN_API_KEY;
 
 export async function authorizedFetch<T = unknown>(
   path: string,
   init: RequestInit,
 ): Promise<T> {
-  if (!ADMIN_API_KEY) {
-    throw new Error(
-      "ADMIN_API_KEY belum diset di environment Next.js (server only)",
-    );
+  const cookieStore = await cookies();
+  const token = cookieStore.get(ADMIN_AUTH_COOKIE)?.value;
+
+  if (!token) {
+    throw new Error("NOT_AUTHENTICATED");
   }
 
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...init,
     headers: {
       "Content-Type": "application/json",
-      "x-api-key": ADMIN_API_KEY,
+      Authorization: `Bearer ${token}`,
       ...(init.headers ?? {}),
     },
   });

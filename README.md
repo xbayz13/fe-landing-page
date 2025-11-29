@@ -7,12 +7,11 @@ Next.js 16 (App Router) frontend untuk menampilkan marketing site dan halaman ad
 ```bash
 cd nextjs
 npm install
-cp env.example .env.local  # sesuaikan API base URL & ADMIN_API_KEY
+cp env.example .env.local  # sesuaikan API base URL
 npm run dev                # jalankan di port default 3000
 ```
 
 - `NEXT_PUBLIC_API_BASE_URL` default ke `http://localhost:3000/api` (URL NestJS).
-- `ADMIN_API_KEY` harus sama dengan nilai di backend agar aksi admin bisa dieksekusi.
 
 ### Struktur Halaman
 
@@ -22,9 +21,11 @@ npm run dev                # jalankan di port default 3000
 
 Landing page memanfaatkan ISR (`revalidate = 60`), sehingga update dari CMS akan muncul maksimal 1 menit kemudian. Saat API tidak tersedia, halaman akan fallback ke konten statis sehingga build tetap aman.
 
-### Modul Admin (Server Actions)
+### Modul Admin (Server Actions + JWT)
 
-Seluruh form pada `/admin` menembak endpoint NestJS via Server Actions yang dilindungi `ADMIN_API_KEY`. Masing-masing modul akan me-revalidate halaman terkait (landing page dan blog).
+- Login via `/admin/login` dengan kredensial superadmin (atau user lain yang Anda buat di backend).
+- Server Actions menyimpan JWT dalam HttpOnly cookie (`admin_token`) dan menyertakan header `Authorization: Bearer <token>` ketika memanggil API NestJS.
+- Setiap submit akan me-revalidate halaman terkait (landing page dan blog).
 
 | Modul | Endpoint Backend |
 |-------|------------------|
@@ -39,7 +40,7 @@ Seluruh form pada `/admin` menembak endpoint NestJS via Server Actions yang dili
 | Blog Authors | `POST/PATCH/DELETE /blog/authors` |
 | Blog Categories | `POST/PATCH/DELETE /blog/categories` |
 
-Tidak ada JavaScript client-side tambahan sehingga nilai `ADMIN_API_KEY` tidak pernah terkirim ke browser.
+Tidak ada JavaScript client-side tambahan sehingga token hanya tersimpan di cookie HttpOnly (tidak dapat diakses dari browser).
 
 ### Build & Deploy
 
@@ -49,4 +50,4 @@ npm run build
 npm run start
 ```
 
-Deploy ke platform pilihan (Vercel/Netlify/Render). Pastikan environment variable (`NEXT_PUBLIC_API_BASE_URL`, `ADMIN_API_KEY`) terset di server target.
+Deploy ke platform pilihan (Vercel/Netlify/Render). Pastikan environment variable `NEXT_PUBLIC_API_BASE_URL` terset di server target.

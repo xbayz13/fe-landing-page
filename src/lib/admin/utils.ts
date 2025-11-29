@@ -3,18 +3,20 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export function revalidateAndRedirect(
+export async function revalidateAndRedirect(
   successParam: string,
   paths: string[] = ["/", "/admin"],
 ) {
-  paths.forEach((path) => revalidatePath(path));
+  await Promise.all(paths.map(async (path) => revalidatePath(path)));
   redirect(`/admin?success=${successParam}`);
 }
 
-export function revalidateBlogAndRedirect(successParam: string) {
-  revalidatePath("/admin");
-  revalidatePath("/blog");
-  revalidatePath("/");
+export async function revalidateBlogAndRedirect(successParam: string) {
+  await Promise.all([
+    revalidatePath("/admin"),
+    revalidatePath("/blog"),
+    revalidatePath("/"),
+  ]);
   redirect(`/admin?success=${successParam}`);
 }
 

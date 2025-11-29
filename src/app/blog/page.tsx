@@ -1,19 +1,15 @@
 import Link from "next/link";
 import { fetchLandingConfig, fetchAllBlogPosts } from "@/lib/api";
-import { generateLandingMetadata } from "@/lib/landing-data";
+import { generateLandingMetadata, fallbackLandingConfig } from "@/lib/landing-data";
 import { formatDate } from "@/lib/format";
 import type { BlogPost, LandingConfig } from "@/lib/types";
 
 export const revalidate = 60;
-export const metadata = generateLandingMetadata({});
+export const metadata = generateLandingMetadata();
 
 export default async function BlogListingPage() {
   const [config, postsData] = await Promise.all([
-    fetchLandingConfig().catch(() => ({
-      brand: { companyName: "Landing CMS" },
-      navigation: [],
-      footerLinks: [],
-    })),
+    fetchLandingConfig().catch(() => fallbackLandingConfig),
     fetchAllBlogPosts({ status: "published", limit: 50 }).catch(() => ({
       data: [] as BlogPost[],
       meta: { page: 1, limit: 50, total: 0, totalPages: 1 },

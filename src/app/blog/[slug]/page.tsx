@@ -17,6 +17,7 @@ export async function generateMetadata({
     description: "",
     url: "",
     type: "article" as const,
+    image: undefined,
   }));
 
   return {
